@@ -149,7 +149,6 @@ cpdef tuple parse_xyz_all(bytes filename_bytes, Py_ssize_t every=1):
         raise MemoryError("Allocazione atom_types fallita")
     types_data = <int8_t*> types_arr.data
 
-    # inizializza atom_types a 0 (non necessario ma pulito)
     for i in range(n_atoms):
         types_data[i] = 0
 
@@ -181,17 +180,13 @@ cpdef tuple parse_xyz_all(bytes filename_bytes, Py_ssize_t every=1):
             if fgets(buffer, MAX_LENGTH, fptr) == NULL:
                 raise ValueError("File troncato: manca header nel secondo passaggio")
 
-            # Se è il primo frame TENUTO, estrai Lattice
             if (frame % every) == 0 and kept_idx == 0:
-                # cerca la sottostringa Lattice="
                 lat_ptr = strstr(buffer, b"Lattice=\"")
                 if lat_ptr == NULL:
                     raise ValueError("Header privo di campo Lattice=\"...\"")
-                # sposta il puntatore all'inizio dei numeri
                 lat_ptr += 9  # len("Lattice=\"")
                 p = lat_ptr
 
-                # leggi 9 double e riempi cell_data in row-major (3x3)
                 for k in range(9):
                     errno = 0
                     val = strtod(p, &endptr)
@@ -199,10 +194,8 @@ cpdef tuple parse_xyz_all(bytes filename_bytes, Py_ssize_t every=1):
                         raise ValueError("Parsing Lattice= fallito")
                     cell_data[k] = val
                     p = endptr
-                # opzionalmente potresti verificare che il prossimo carattere sia '"'
-                # ma non è strettamente necessario qui
 
-            # Se non vogliamo tenere questo frame, skippiamo le righe atomo
+
             if (frame % every) != 0:
                 for i in range(n_atoms):
                     if fgets(buffer, MAX_LENGTH, fptr) == NULL:
@@ -215,7 +208,6 @@ cpdef tuple parse_xyz_all(bytes filename_bytes, Py_ssize_t every=1):
                 if fgets(buffer, MAX_LENGTH, fptr) == NULL:
                     raise ValueError("File troncato nelle righe atomo (parse)")
 
-                # tokenizza: primo token = simbolo atomico
                 token = strtok(buffer, b" \t\n")
                 if token == NULL:
                     raise ValueError("Riga atomo vuota o malformata")
@@ -223,17 +215,14 @@ cpdef tuple parse_xyz_all(bytes filename_bytes, Py_ssize_t every=1):
                 # atom_types: solo al primo frame tenuto
                 if kept_idx == 0:
                     c = <unsigned char> token[0]
-                    # rendi maiuscolo (grezzo)
                     if c >= ord('a') and c <= ord('z'):
                         c = c - ord('a') + ord('A')
 
                     if c == ord('O'):
                         types_data[i] = <int8_t> 1
                     else:
-                        types_data[i] = <int8_t> 2   # tutto ciò che non è O diventa 2 (H nel tuo caso)
+                        types_data[i] = <int8_t> 2
 
-                # ora leggi i 10 numeri: x y z mass vx vy vz upx upy upz
-                # useremo pos_data, vel_data e unwrapped_pos_data
                 base_pos = (kept_idx * n_atoms + i) * 3
                 base_vel = (kept_idx * n_atoms + i) * 3
                 base_unwrapped_pos = (kept_idx * n_atoms + i) * 3
@@ -267,5 +256,4 @@ cpdef tuple parse_xyz_all(bytes filename_bytes, Py_ssize_t every=1):
     finally:
         fclose(fptr)
 
-    # Ritorna tuple come nel tuo codice Python
     return pos_arr, vel_arr, unwrapped_pos_arr, cell_arr, types_arr
