@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-# NOTE: classical velocities are set to zero in this code
-
 import logging
 import re
 import sys
