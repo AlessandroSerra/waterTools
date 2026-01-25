@@ -1,7 +1,9 @@
 import math
+from typing import Tuple
 
 import numpy as np
 from numba import njit, prange
+from scipy.integrate import simpson
 
 
 @njit(parallel=True, fastmath=True, cache=True)
@@ -247,3 +249,161 @@ def compute_rdf(
         "excited": rdf_exc,
         "ground": rdf_gs,
     }
+
+
+def compute_R1(bins: np.ndarray, g_r: np.ndarray, r1: float, r2: float) -> float:
+    """
+    Calcola la distanza media R1 di un shell dal RDF g(r), pesata per r^2:
+
+        R1 = ∫_{r1}^{r2} r * (r^2 * g(r)) dr / ∫_{r1}^{r2} (r^2 * g(r)) dr
+           = ∫_{r1}^{r2} r^3 * g(r) dr / ∫_{r1}^{r2} r^2 * g(r) dr
+
+    Parametri
+    ---------
+    bins : array 1D
+        Valori di r (Å).
+    g_r : array 1D
+        Valori di g(r) corrispondenti.
+    r1, r2 : float
+        Limiti di integrazione (Å).
+
+    Ritorna
+    -------
+    float
+        Distanza media del shell (Å).
+    """
+    mask = (bins >= r1) & (bins <= r2)
+    r_sel = bins[mask]
+    g_sel = g_r[mask]
+
+    if r_sel.size < 2:
+        raise ValueError("Intervallo [r1, r2] troppo piccolo o non coperto dai bins.")
+
+    # Numeratore: ∫ r^3 * g(r) dr
+    num = simpson((r_sel**3) * g_sel, x=r_sel)
+
+    # Denominatore: ∫ r^2 * g(r) dr
+    den = simpson((r_sel**2) * g_sel, x=r_sel)
+
+    if den == 0:
+        raise ZeroDivisionError("Denominatore nullo: g(r) ≈ 0 su [r1, r2].")
+
+    return num / den
+
+
+def propagate_R1_error(
+    bins: np.ndarray,
+    g_r: np.ndarray,
+    g_err: np.ndarray,
+    r1: float,
+    r2: float,
+    n_samples: int = 10_000,
+) -> Tuple[float, float]:
+    """
+    Propaga l'errore su g(r) a R1 via Monte Carlo.
+    Versione corretta con peso r^2 e robusta per numero di punti pari/dispari.
+
+    Ritorna
+    -------
+    R1_mean : float
+        Valore medio campionato di R1.
+    R1_std : float
+        Deviazione standard di R1 (errore su R1).
+    """
+    mask = (bins >= r1) & (bins <= r2)
+    r_sel = bins[mask]
+    g_sel = g_r[mask]
+    err_sel = g_err[mask]
+
+    if r_sel.size < 2:
+        raise ValueError("Intervallo [r1, r2] troppo piccolo per Simpson.")
+
+    # campioni g(r)
+    # g_pert shape: (n_samples, n_points)
+    g_pert = g_sel[np.newaxis, :] + np.random.normal(
+        scale=err_sel, size=(n_samples, r_sel.size)
+    )
+
+    # Numeratore: ∫ r^3 * g(r) dr
+    # Moltiplichiamo g_pert per r^3
+    integrand_num = g_pert * (r_sel**3)[np.newaxis, :]
+    # Integriamo lungo l'asse dei punti (axis=-1)
+    num = simpson(integrand_num, x=r_sel, axis=-1)
+
+    # Denominatore: ∫ r^2 * g(r) dr
+    integrand_den = g_pert * (r_sel**2)[np.newaxis, :]
+    den = simpson(integrand_den, x=r_sel, axis=-1)
+
+    R1_samples = num / den
+    # filtra eventuali numeri non finiti
+    R1_samples = R1_samples[np.isfinite(R1_samples)]
+
+    return R1_samples.mean(), R1_samples.std(ddof=1)
+
+
+def compute_I2(bins: np.ndarray, g_r: np.ndarray, r1: float, r2: float) -> float:
+    """
+    Calcola l'integrale di g(r) sul range [r1, r2]:
+
+        I2 = ∫_{r1}^{r2} g(r) dr
+
+    Parametri
+    ---------
+    bins : array 1D
+        Valori di r (Å).
+    g_r : array 1D
+        Valori di g(r).
+    r1, r2 : float
+        Limiti di integrazione (Å).
+
+    Ritorna
+    -------
+    float
+        I2 = ∫ g(r) dr su [r1, r2].
+    """
+    mask = (bins >= r1) & (bins <= r2)
+    r_sel = bins[mask]
+    g_sel = g_r[mask]
+
+    if r_sel.size < 2:
+        raise ValueError("Intervallo [r1, r2] troppo piccolo o non coperto dai bins.")
+
+    return simpson(g_sel, x=r_sel)
+
+
+def propagate_I2_error(
+    bins: np.ndarray,
+    g_r: np.ndarray,
+    g_err: np.ndarray,
+    r1: float,
+    r2: float,
+    n_samples: int = 1000,
+) -> Tuple[float, float]:
+    """
+    Propaga l'errore su g(r) a I2 via Monte Carlo:
+
+        I2 = ∫_{r1}^{r2} g(r) dr
+
+    Ritorna
+    -------
+    I2_mean : float
+        Media campionata di I2.
+    I2_std : float
+        Deviazione standard di I2 (errore su I2).
+    """
+    mask = (bins >= r1) & (bins <= r2)
+    r_sel = bins[mask]
+    g_sel = g_r[mask]
+    err_sel = g_err[mask]
+
+    if r_sel.size < 2:
+        raise ValueError("Intervallo [r1, r2] troppo piccolo o non coperto dai bins.")
+
+    # Vectorized implementation for speed and robustness
+    g_pert = g_sel[np.newaxis, :] + np.random.normal(
+        scale=err_sel, size=(n_samples, r_sel.size)
+    )
+    I2_samples = simpson(g_pert, x=r_sel, axis=-1)
+
+    I2_samples = I2_samples[np.isfinite(I2_samples)]
+    return I2_samples.mean(), I2_samples.std(ddof=1)
