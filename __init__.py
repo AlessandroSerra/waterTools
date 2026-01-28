@@ -1,5 +1,5 @@
 from . import (
-    c_parser,  # se vuoi esporlo
+    c_parser,
     lmp2gpumd,
     spectral,
     temps,
