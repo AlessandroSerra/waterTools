@@ -1,3 +1,23 @@
+\begin{figure*}[ht!]
+	\centering
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
+		\label{fig:vdos_water_a}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_vdos.png}
+		\label{fig:vdos_iceIh_b}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_vdos.png}
+		\label{fig:vdos_iceIX_c}
+	}
+	\caption{Time-resolved VDOS under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX. Colors indicate increasing time after excitation (red to blue). In all cases, the initial spectral enhancement appears at a frequency slightly lower than the equilibrium O–H stretching band, corresponding to the Wigner initialization based on the LS potential, and progressively shifts toward the intrinsic stretching band as the system evolves, accompanied by a redistribution of spectral weight toward lower-frequency modes.}	\label{fig:vdos}
+\end{figure*}
+
+
 In the following, we analyze the non-equilibrium response induced by the vibrational excitation through three complementary observables: the vibrational density of states (VDOS), the time-resolved modal temperatures, and the structural evolution of the hydrogen-bond network as characterized by radial distribution functions (RDFs). We first examine the VDOS to verify the effective population of the targeted vibrational states, before addressing the subsequent energy redistribution and its structural consequences.\\
 To resolve the transient spectral evolution following excitation, the VDOS was evaluated over sliding temporal windows of fixed duration, allowing us to monitor the redistribution of vibrational energy as a function of time. Since we are dealing with non-equilibrium trajectories, particular care was taken in selecting the window length used to compute the velocity autocorrelation function (VACF). Convergence tests showed that the VACF decays to negligible values within approximately $100\,\mathrm{fs}$ for all phases considered. Accordingly, a window length of $100\,\mathrm{fs}$ was adopted for the VDOS evaluation, ensuring that the correlation function was fully contained within each time segment.\\
 
@@ -10,7 +30,7 @@ effective temperature was defined through the classical equipartition
 relation.\\
 More specifically, for each molecule, the instantaneous kinetic energy was
 projected onto internal and collective coordinates defined at the molecular
-level.
+level.\\
 
 The stretching contribution was obtained by projecting the relative O–H velocities onto the corresponding bond directions, and the associated modal temperature was defined as
 \begin{equation}
@@ -31,36 +51,12 @@ Librational contributions were obtained by treating each molecule as an instanta
 \begin{equation}
 	T_{\alpha} = \frac{L_{\alpha}^2}{I_{\alpha} k_B},
 \end{equation}
-where $L_{\alpha}$ and $I_{\alpha}$ denote the angular momentum component and the corresponding principal moment of inertia.
-
+where $L_{\alpha}$ and $I_{\alpha}$ denote the angular momentum component and the corresponding principal moment of inertia.\\
 Finally, the center-of-mass and hydrogen-bond contributions were computed from
 the relative translational velocities of the corresponding atomic pairs using
 the same equipartition-based definition.\\
 
-\begin{figure}[t]
-	\centering
-	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
-		\label{fig:temp_water_times_a}
-	}
-	\\
-	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_vdos.png}
-		\label{fig:temp_ice_times_b}
-	}
-	\\
-	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_vdos.png}
-		\label{fig:temp_ice_times_c}
-	}
-	\caption{Time-resolved VDOS under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX. Colors indicate increasing time after excitation (red to blue). In all cases, the initial spectral enhancement appears at a frequency slightly lower than the equilibrium O–H stretching band, corresponding to the Wigner initialization based on the LS potential, and progressively shifts toward the intrinsic stretching band as the system evolves, accompanied by a redistribution of spectral weight toward lower-frequency modes.}	\label{fig:vdos}
-\end{figure}
-
-
-We begin with liquid water. Figure~\ref{fig:temp_water_times_a} shows the time-resolved VDOS
-for excited and non-excited molecules. Immediately after excitation, a
-pronounced enhancement of spectral intensity appears in the O–H stretching
-region, confirming the effective population of the targeted vibrational states.
+We begin with liquid water. Figure~\ref{fig:vdos_water_a} shows the time-resolved VDOS for excited and non-excited molecules. Immediately after excitation, a pronounced enhancement of spectral intensity appears in the O–H stretching region, confirming the effective population of the targeted vibrational states.
 Notably, the initial peak is centered at a slightly lower frequency than the
 maximum of the equilibrium stretching band, reflecting the fundamental frequency
 of the isolated Lippincott–Schroeder potential used in the Wigner
@@ -70,12 +66,19 @@ Concomitantly, a gradual increase of spectral weight is observed in the bending
 and low-frequency regions, indicating a redistribution of vibrational energy
 toward lower-frequency degrees of freedom.\\
 A qualitatively similar spectral evolution is observed in both ice Ih
-(Fig.~\ref{fig:temp_ice_times_b}) and ice IX (Fig.~\ref{fig:temp_ice_times_c}),
+(Fig.~\ref{fig:vdos_iceIh_b}) and ice IX (Fig.~\ref{fig:vdos_iceIX_c}),
 where the initial enhancement in the stretching region is followed by a
 progressive redistribution of spectral weight toward lower-frequency modes.
 However, compared to liquid water, the spectral features in the crystalline
 phases remain sharper, reflecting the more constrained hydrogen-bond network and
 increases long range structural order.\\
+
+\begin{figure*}
+	\begin{center}
+		\includegraphics[width=0.95\columnwidth]{figures/iceIX_10perc_temps_fit.png}
+	\end{center}
+	\caption{}\label{fig:}
+\end{figure*}
 
 While the VDOS provides a clear spectral signature of the excitation, its temporal resolution is inherently limited by the finite window length used in the Fourier transform. In the present case, the 100 fs window implies that spectral estimates are effectively averaged over this timescale, preventing a fully resolved description of faster energy redistribution processes.\\
 To overcome this limitation, we analyze the time evolution of modal temperatures, which are defined from the instantaneous kinetic energy projections and therefore provide a frame-resolved characterization of the energy flow between different dynamical sectors.

@@ -1,24 +1,22 @@
 \documentclass[reprint,amsmath,amssymb,aps]{revtex4-2}
 
 \usepackage{graphicx}
-\usepackage{subfig}
-\usepackage{caption}
-% \captionsetup[figure]{justification=justified}   
-\captionsetup[figure]{justification=centerfirst} % unica che funziona   
+\usepackage[caption=false]{subfig}
 \usepackage{dcolumn}
 \usepackage{bm}
 \usepackage{amsmath}
-\usepackage{epsfig}
-\usepackage{rotating}
-\usepackage[version=4]{mhchem}
-\usepackage{enumerate}
-\usepackage{xcolor}
-\bibliographystyle{apsrev4-2}
-\usepackage{float}
 \usepackage{hyperref}
-% Unused packages commented out (install with 'sudo tlmgr install <package>' if needed):
+\usepackage{xcolor}
 \usepackage{braket}  % Bra-ket notation
+\usepackage{float}
+% \usepackage{subcaption}
 % \usepackage{cancel}  % Cancel terms in equations
+% \usepackage{caption}
+% \usepackage{epsfig}
+% \usepackage{rotating}
+% \usepackage{enumerate}
+
+\bibliographystyle{apsrev4-2}
 
 \def\iio{{$\langle 110 \rangle$}}
 \def\iii{{$\langle 111 \rangle$}}
@@ -36,20 +34,154 @@
 \date{\today}
 
 \begin{abstract}
-
+	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}
-\input{sections/Intro}
+% \input{sections/Intro}
+Water is a paradigmatic hydrogen-bonded system whose macroscopic properties emerge from a highly cooperative and continuously fluctuating network of intermolecular interactions. Unlike simple liquids, its local structure is neither rigid nor fully random: directional hydrogen bonds impose transient constraints that couple intermolecular organization to intramolecular vibrations. As a result, structural correlations and molecular motions are deeply intertwined, and even localized perturbations can induce collective responses across the network. This interplay persists across phases, from the disordered liquid to crystalline ices with distinct topologies and degrees of proton order, making water an ideal framework to investigate how vibrational excitations propagate in a correlated molecular environment.\\
+
+Experimentally, ultrafast vibrational spectroscopy has provided detailed insight into the nonequilibrium dynamics of water. Infrared pump–probe measurements have revealed sub-picosecond relaxation of the O–H stretching mode and rapid redistribution of excess energy toward bending and librational modes within the hydrogen-bond network \cite{dettori2019energy}. Complementary two-dimensional infrared (2D-IR) spectroscopy has further established a direct connection between vibrational frequency and local hydrogen-bond configuration, enabling the time-resolved observation of spectral diffusion and hydrogen-bond rearrangements \cite{lspot}. In particular, the evolution of 2D line shapes demonstrates that the O–H stretching frequency reflects instantaneous hydrogen-bond geometry and that structural fluctuations occur on femtosecond to picosecond timescales. While these techniques provide exquisite temporal resolution and indirect structural sensitivity, disentangling vibrational energy redistribution from the underlying microscopic reorganization of the hydrogen-bond network remains challenging.\\
+
+Computationally, atomistic simulations provide direct access to the microscopic pathways underlying vibrational energy relaxation in hydrogen-bonded liquids. On the one hand, equilibrium molecular dynamics combined with mixed quantum–classical frequency mapping schemes has enabled the calculation of infrared and two-dimensional infrared response functions from atomistic trajectories, establishing a quantitative link between vibrational frequency fluctuations and hydrogen-bond rearrangements \cite{roberts2009structural}. In this framework, simulations serve both as an interpretative tool for spectral diffusion and as a benchmark for water models against experimental observables. On the other hand, nonequilibrium molecular dynamics approaches have been developed to mimic pump–probe excitation protocols directly. Methods based on frequency-selective thermostats allow controlled excitation of a targeted vibrational mode while leaving the remaining degrees of freedom near equilibrium, followed by microcanonical evolution to probe energy redistribution pathways. A notable example is the generalized Langevin equation (GLE) approach introduced to simulate vibrational energy relaxation in pump–probe spectroscopy, where a colored-noise “hotspot” thermostat selectively excites a narrow frequency window and subsequent relaxation is monitored in the NVE ensemble \cite{dettori2017simulating}.\\
+While these methods provide molecular-level insight into relaxation mechanisms and characteristic time scales, establishing a direct correlation between selective vibrational excitation and the transient structural response of the hydrogen-bond network remains incomplete, particularly across phases with distinct topologies.\\
+
+In this work, we address this challenge by combining selective vibrational excitation with large-scale atomistic simulations of water across distinct phases. We initialize a controlled nonequilibrium state by exciting a fraction of O–H stretching modes using Wigner sampling, followed by microcanonical molecular dynamics evolution with a machine-learned interatomic potential that retains near first-principles accuracy while enabling system sizes sufficient to capture collective network effects. Rather than directly simulating a spectroscopic observable, our approach focuses on the microscopic dynamics of energy redistribution and structural response under controlled excitation conditions. By analyzing time-resolved vibrational densities of states, mode-resolved temperatures, and radial distribution functions, we directly correlate vibrational energy redistribution with the transient structural response of the hydrogen-bond network. Importantly, we perform a systematic comparison between liquid water, proton-disordered ice Ih, and proton-ordered ice IX, thereby disentangling the roles of structural disorder, lattice constraints, and proton ordering in governing ultrafast energy flow. This unified framework provides an atomistic perspective on how network topology and degree of order influence the coupling between localized vibrational excitation and collective hydrogen-bond rearrangements.
+
+
 
 \section{Computational Details}
-\input{sections/Compu}
+% \input{sections/Compu}
+\subsection{Generation of Equilibrium Samples}
+Before investigating the non-equilibrium response induced by vibrational excitation, we generated equilibrium reference samples for liquid water, ice Ih, and ice IX using consistent preparation protocols.\\
+
+The liquid water samples were generated from an equilibrium configuration at ambient temperature, which was replicated to obtain a system of one thousand molecules. The system was generated inside a cubic cell, whose side length was chosen to reproduce an initial target mass density of $1 \mathrm{g/cm^3}$.\\
+
+In contrast to the liquid phase, the generation of crystalline ice configurations requires explicit control over proton ordering and lattice symmetry, as well as compliance with the Ice Rules. Under these constraints, crystalline ice samples were generated using the GenIce framework \cite{GenIce}.\\
+In order to account for different proton orderings, we chose to represent two ice phases: the Ih phase, which is the stable proton-disordered form of ice under ambient-pressure conditions, and the IX phase, which corresponds to a proton-ordered crystalline structure. For ice Ih, GenIce was used to generate configurations satisfying the ice rules with disordered proton arrangements consistent with the Ih lattice symmetry. For ice IX, a proton-ordered configuration consistent with the corresponding crystallographic structure was generated, without the need for averaging over multiple proton disorder realizations.\\
+
+Due to the constraints imposed by the GenIce framework on the construction of periodic crystalline cells, the ice Ih and ice IX unit cells were replicated to obtain supercells containing 3072 and 2880 atoms, respectively. These system sizes were chosen as the closest multiples compatible with the underlying lattice symmetries and comparable to the system size used for liquid water.
+
+
+\subsection{Interaction Model and Computational Framework}
+All molecular dynamics simulations in this study were performed using a neural network interatomic potential of the NEP (Neuro-Evolution Potential) class. The NEP framework represents the total energy of the system as a sum of atomic contributions expressed as functions of the local environment, with parameters trained on density functional theory (DFT) reference data. This class of potentials has been shown to provide near first-principles accuracy while retaining the computational efficiency required for large-scale molecular dynamics simulations, and has been validated for both liquid water and crystalline ice phases \cite{nep}. The simulations were carried out using the GPUMD package, which provides a native implementation of NEP potentials and enables efficient GPU-accelerated molecular dynamics. All equilibrium and non-equilibrium trajectories discussed in this work were generated within this computational framework.
+
+\begin{figure*}[ht!]
+	\centering
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
+		\label{fig:vdos_water_a}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_vdos.png}
+		\label{fig:vdos_iceIh_b}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_vdos.png}
+		\label{fig:vdos_iceIX_c}
+	}
+	\caption{Time-resolved VDOS under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX. Colors indicate increasing time after excitation (red to blue). In all cases, the initial spectral enhancement appears at a frequency slightly lower than the equilibrium O–H stretching band, corresponding to the Wigner initialization based on the LS potential, and progressively shifts toward the intrinsic stretching band as the system evolves, accompanied by a redistribution of spectral weight toward lower-frequency modes.}	\label{fig:vdos}
+\end{figure*}
+
+\subsection{Simulation Protocol}
+For each system, an equilibration stage was first performed to ensure thermodynamic stability prior to the excitation procedure. Equilibration was carried out in the isothermal–isobaric (NPT) ensemble. The temperature was controlled using a Nosé–Hoover chain thermostat, while pressure was regulated through a Berendsen barostat, allowing the simulation cell to relax to the target density. Liquid water was equilibrated at $300\,\mathrm{K}$, whereas the crystalline ice phases were equilibrated at $200\,\mathrm{K}$. Equilibrium was assessed by monitoring the stability of the total energy, temperature, and pressure over time.\\
+
+At the end of the equilibration stage, the final configuration was used as the reference structure for the excitation protocol. Quantum nuclear fluctuations were incorporated through a Wigner phase-space representation applied to selected vibrational degrees of freedom.\\
+The corresponding distribution was constructed from the eigenstates of the full Lippincott–Schroeder (LS) potential for hydrogen-bonded pairs \cite{lspot}. The one-dimensional Schrödinger equation associated with the LS potential was solved to obtain the vibrational eigenfunctions and eigenvalues, which were used to evaluate the phase-space distribution.\\
+A fraction corresponding to 10\% of the total water molecules was randomly selected and initialized quantum mechanically. For each selected molecule, initial positions and momenta were sampled from the phase-space distributions associated with the $n=0$ and $n=1$ vibrational eigenstates of the LS potential for the two O–H bonds, respectively. The remaining 90\% of the molecules were initialized according to the classical Maxwell–Boltzmann distribution at the equilibration temperature.\\
+
+After the excitation step, the system was propagated in the microcanonical (NVE) ensemble to prevent artificial energy exchange with an external thermostat and to enable an unbiased characterization of the intrinsic non-equilibrium response. The subsequent dynamics were followed over a time interval of $30\,\mathrm{ps}$, sufficient to capture both the prompt structural response and the subsequent energy redistribution processes.\\
+All trajectories were integrated using a time step of $0.1\,\mathrm{fs}$, chosen to accurately resolve the high-frequency O–H stretching vibrations and to ensure stable energy conservation during the microcanonical production runs.\\
+
+For each phase, the entire equilibration–excitation–production workflow was repeated 50 times independently. All reported structural and dynamical observables were obtained by averaging over these independent realizations, and the associated uncertainties were estimated from the corresponding ensemble fluctuations.
+
+\begin{figure*}[ht!]
+	\centering
+	% \subfloat[]{%
+	% 	\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
+	% 	\label{fig:vdos_water_a}
+	% }
+	% \hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_temps_fit.png}
+		\label{fig:temps_fit_iceIh_b}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_temps_fit.png}
+		\label{fig:temps_fit_iceIX_c}
+	}
+	\caption{}
+	\label{fig:temps_fit}
+\end{figure*}
 
 
 \section{Results and Discussion}
-\input{sections/Results}
+% \input{sections/Results}
+In the following, we analyze the non-equilibrium response induced by the vibrational excitation through three complementary observables: the vibrational density of states (VDOS), the time-resolved modal temperatures, and the structural evolution of the hydrogen-bond network as characterized by radial distribution functions (RDFs). We first examine the VDOS to verify the effective population of the targeted vibrational states, before addressing the subsequent energy redistribution and its structural consequences.\\
+To resolve the transient spectral evolution following excitation, the VDOS was evaluated over sliding temporal windows of fixed duration, allowing us to monitor the redistribution of vibrational energy as a function of time. Since we are dealing with non-equilibrium trajectories, particular care was taken in selecting the window length used to compute the velocity autocorrelation function (VACF). Convergence tests showed that the VACF decays to negligible values within approximately $100\,\mathrm{fs}$ for all phases considered. Accordingly, a window length of $100\,\mathrm{fs}$ was adopted for the VDOS evaluation, ensuring that the correlation function was fully contained within each time segment.\\
+
+While the time-resolved VDOS provides direct spectral information on the excited vibrational states, its temporal resolution is intrinsically limited by the finite window length required for a stable Fourier transform. To achieve a more refined characterization of the energy redistribution dynamics, we therefore analyze the time evolution of modal temperatures.\\
+The modal temperatures were computed by decomposing the kinetic energy into
+physically distinct dynamical contributions, including O–H stretching, H–O–H
+bending, librational motion, hydrogen-bond related motion, and center-of-mass
+translational degrees of freedom. For each subset of degrees of freedom, an
+effective temperature was defined through the classical equipartition
+relation.\\
+More specifically, for each molecule, the instantaneous kinetic energy was
+projected onto internal and collective coordinates defined at the molecular
+level.\\
+
+The stretching contribution was obtained by projecting the relative O–H velocities onto the corresponding bond directions, and the associated modal temperature was defined as
+\begin{equation}
+	T_{\mathrm{stretch}} = \frac{\mu_{OH} v_{\parallel}^2}{k_B},
+\end{equation}
+where $\mu_{OH}$ is the reduced mass of the O–H pair and $v_{\parallel}$ is the component of the relative velocity along the bond axis.
+
+The bending contribution was evaluated in terms of the time derivative of the H–O–H angle $\theta$. Defining the bending coordinate as $\phi=\theta/2$, the associated kinetic energy reads
+\begin{equation}
+	K_{\mathrm{bend}} = \frac{1}{2} I_{\theta} \left( \frac{\dot{\theta}}{2} \right)^2,
+\end{equation}
+with $I_{\theta} = \sum_i m_{H_i} r_{OH,i}^2$ the effective moment of inertia of the two O–H arms. The corresponding modal temperature follows from equipartition as
+\begin{equation}
+	T_{\mathrm{bend}} = \frac{I_{\theta}\dot{\theta}^2}{4 k_B}.
+\end{equation}
+
+Librational contributions were obtained by treating each molecule as an instantaneous rigid body and projecting the angular momentum onto its principal axes. For each rotational degree of freedom $\alpha$, the associated temperature was defined as
+\begin{equation}
+	T_{\alpha} = \frac{L_{\alpha}^2}{I_{\alpha} k_B},
+\end{equation}
+where $L_{\alpha}$ and $I_{\alpha}$ denote the angular momentum component and the corresponding principal moment of inertia.\\
+Finally, the center-of-mass and hydrogen-bond contributions were computed from
+the relative translational velocities of the corresponding atomic pairs using
+the same equipartition-based definition.\\
+
+We begin with liquid water. Figure~\ref{fig:vdos_water_a} shows the time-resolved VDOS for excited and non-excited molecules. Immediately after excitation, a pronounced enhancement of spectral intensity appears in the O–H stretching region, confirming the effective population of the targeted vibrational states.
+Notably, the initial peak is centered at a slightly lower frequency than the
+maximum of the equilibrium stretching band, reflecting the fundamental frequency
+of the isolated Lippincott–Schroeder potential used in the Wigner
+initialization. As the system evolves, the stretching feature progressively
+shifts toward higher frequencies, approaching the equilibrium band position.\\
+Concomitantly, a gradual increase of spectral weight is observed in the bending
+and low-frequency regions, indicating a redistribution of vibrational energy
+toward lower-frequency degrees of freedom.\\
+A qualitatively similar spectral evolution is observed in both ice Ih
+(Fig.~\ref{fig:vdos_iceIh_b}) and ice IX (Fig.~\ref{fig:vdos_iceIX_c}),
+where the initial enhancement in the stretching region is followed by a
+progressive redistribution of spectral weight toward lower-frequency modes.
+However, compared to liquid water, the spectral features in the crystalline
+phases remain sharper, reflecting the more constrained hydrogen-bond network and
+increases long range structural order.\\
+
+
+
+While the VDOS provides a clear spectral signature of the excitation, its temporal resolution is inherently limited by the finite window length used in the Fourier transform. In the present case, the 100 fs window implies that spectral estimates are effectively averaged over this timescale, preventing a fully resolved description of faster energy redistribution processes.\\
+To overcome this limitation, we analyze the time evolution of modal temperatures, which are defined from the instantaneous kinetic energy projections and therefore provide a frame-resolved characterization of the energy flow between different dynamical sectors.
+
 
 
 \section{Conclusions}
