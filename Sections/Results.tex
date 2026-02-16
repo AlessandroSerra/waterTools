@@ -45,17 +45,37 @@ the same equipartition-based definition.\\
 	}
 	\\
 	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_vdos.png}
 		\label{fig:temp_ice_times_b}
 	}
 	\\
 	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
+		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_vdos.png}
 		\label{fig:temp_ice_times_c}
 	}
-	\caption{Time-resolved vibrational density of states (VDOS) for liquid water under 10\% vibrational excitation. The left panel reports the VDOS of non-excited molecules, while the right panel shows the evolution for excited molecules. Colors encode the temporal progression from early (red) to late (blue) times after excitation. The initial enhancement in the O–H stretching region is centered at the fundamental frequency of the Lippincott–Schroeder potential and progressively shifts toward higher frequencies, approaching the equilibrium stretching band, accompanied by a redistribution of spectral weight toward bending and low-frequency modes.}
-	\label{fig:vdos-water}
+	\caption{Time-resolved VDOS under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX. Colors indicate increasing time after excitation (red to blue). In all cases, the initial spectral enhancement appears at a frequency slightly lower than the equilibrium O–H stretching band, corresponding to the Wigner initialization based on the LS potential, and progressively shifts toward the intrinsic stretching band as the system evolves, accompanied by a redistribution of spectral weight toward lower-frequency modes.}	\label{fig:vdos}
 \end{figure}
 
 
-We begin with liquid water. Figure~\ref{fig:vdos-water} shows the time-resolved VDOS for excited and non-excited molecules. Immediately after excitation, a pronounced enhancement of spectral intensity appears in the O–H stretching region, confirming the effective population of the targeted vibrational states. Notably, the initial peak is centered at a slightly lower frequency than the maximum of the equilibrium stretching band, reflecting the fundamental frequency of the isolated Lippincott–Schroeder potential used in the Wigner initialization. As the system evolves, the stretching feature progressively shifts toward higher frequencies, approaching the equilibrium band position. This shift indicates the gradual adaptation of the initially prepared molecular-like excitation to the condensed-phase environment.
+We begin with liquid water. Figure~\ref{fig:temp_water_times_a} shows the time-resolved VDOS
+for excited and non-excited molecules. Immediately after excitation, a
+pronounced enhancement of spectral intensity appears in the O–H stretching
+region, confirming the effective population of the targeted vibrational states.
+Notably, the initial peak is centered at a slightly lower frequency than the
+maximum of the equilibrium stretching band, reflecting the fundamental frequency
+of the isolated Lippincott–Schroeder potential used in the Wigner
+initialization. As the system evolves, the stretching feature progressively
+shifts toward higher frequencies, approaching the equilibrium band position.\\
+Concomitantly, a gradual increase of spectral weight is observed in the bending
+and low-frequency regions, indicating a redistribution of vibrational energy
+toward lower-frequency degrees of freedom.\\
+A qualitatively similar spectral evolution is observed in both ice Ih
+(Fig.~\ref{fig:temp_ice_times_b}) and ice IX (Fig.~\ref{fig:temp_ice_times_c}),
+where the initial enhancement in the stretching region is followed by a
+progressive redistribution of spectral weight toward lower-frequency modes.
+However, compared to liquid water, the spectral features in the crystalline
+phases remain sharper, reflecting the more constrained hydrogen-bond network and
+increases long range structural order.\\
+
+While the VDOS provides a clear spectral signature of the excitation, its temporal resolution is inherently limited by the finite window length used in the Fourier transform. In the present case, the 100 fs window implies that spectral estimates are effectively averaged over this timescale, preventing a fully resolved description of faster energy redistribution processes.\\
+To overcome this limitation, we analyze the time evolution of modal temperatures, which are defined from the instantaneous kinetic energy projections and therefore provide a frame-resolved characterization of the energy flow between different dynamical sectors.
