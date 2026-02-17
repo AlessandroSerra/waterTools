@@ -71,17 +71,17 @@ All molecular dynamics simulations in this study were performed using a neural n
 \begin{figure*}[ht!]
 	\centering
 	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
+		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.pdf}
 		\label{fig:vdos_water_a}
 	}
 	\hfill
 	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_vdos.png}
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_vdos.pdf}
 		\label{fig:vdos_iceIh_b}
 	}
 	\hfill
 	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_vdos.png}
+		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_vdos.pdf}
 		\label{fig:vdos_iceIX_c}
 	}
 	\caption{Time-resolved VDOS under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX. Colors indicate increasing time after excitation (red to blue). In all cases, the initial spectral enhancement appears at a frequency slightly lower than the equilibrium O–H stretching band, corresponding to the Wigner initialization based on the LS potential, and progressively shifts toward the intrinsic stretching band as the system evolves, accompanied by a redistribution of spectral weight toward lower-frequency modes.}	\label{fig:vdos}
@@ -99,23 +99,38 @@ All trajectories were integrated using a time step of $0.1\,\mathrm{fs}$, chosen
 
 For each phase, the entire equilibration–excitation–production workflow was repeated 50 times independently. All reported structural and dynamical observables were obtained by averaging over these independent realizations, and the associated uncertainties were estimated from the corresponding ensemble fluctuations.
 
-\begin{figure*}[ht!]
+\begin{figure*}[p]
 	\centering
-	% \subfloat[]{%
-	% 	\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.png}
-	% 	\label{fig:vdos_water_a}
-	% }
-	% \hfill
 	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_temps_fit.png}
+		\includegraphics[width=\columnwidth]{figures/water_10perc_temps_fit.pdf}
+		\label{fig:temps_fit_water_a}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=0.9\columnwidth]{figures/water_10perc_tamps_tau.pdf}
+		\label{fig:temps_fit_water_a}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_temps_fit.pdf}
 		\label{fig:temps_fit_iceIh_b}
 	}
 	\hfill
 	\subfloat[]{%
-		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_temps_fit.png}
+		\includegraphics[width=0.9\columnwidth]{figures/iceIh_10perc_tamps_tau.pdf}
+		\label{fig:temps_fit_iceIh_b}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_temps_fit.pdf}
+		\label{fig:temps_fit_iceIX_c}
+	}\hfill
+	\subfloat[]{%
+		\includegraphics[width=0.9\columnwidth]{figures/iceIX_10perc_tamps_tau.pdf}
 		\label{fig:temps_fit_iceIX_c}
 	}
-	\caption{}
+	\caption{Time-resolved modal temperatures and extracted characteristic coupling times under 10\% vibrational excitation for liquid water, ice Ih, and ice IX.
+		Panels (a), (c), and (e) report the temporal evolution of the modal temperatures associated with O–H stretching, H–O–H bending, librational motion, hydrogen-bond degrees of freedom, and center-of-mass translation, together with exponential fits used to determine relaxation times. Panels (b), (d), and (f) summarize the corresponding coupling times for each dynamical sector, highlighting the hierarchy of intramolecular and intermolecular energy redistribution processes in the three phases. The rapid decay of the excited stretching mode is followed by a sequential redistribution of energy toward bending, librational, and intermolecular degrees of freedom, ultimately approaching the equilibrium temperature.}
 	\label{fig:temps_fit}
 \end{figure*}
 
