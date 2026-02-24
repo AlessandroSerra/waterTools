@@ -50,6 +50,29 @@ While these methods provide molecular-level insight into relaxation mechanisms a
 
 In this work, we address this challenge by combining selective vibrational excitation with large-scale atomistic simulations of water across distinct phases. We initialize a controlled nonequilibrium state by exciting a fraction of O–H stretching modes using Wigner sampling, followed by microcanonical molecular dynamics evolution with a machine-learned interatomic potential that retains near first-principles accuracy while enabling system sizes sufficient to capture collective network effects. Rather than directly simulating a spectroscopic observable, our approach focuses on the microscopic dynamics of energy redistribution and structural response under controlled excitation conditions. By analyzing time-resolved vibrational densities of states, mode-resolved temperatures, and radial distribution functions, we directly correlate vibrational energy redistribution with the transient structural response of the hydrogen-bond network. Importantly, we perform a systematic comparison between liquid water, proton-disordered ice Ih, and proton-ordered ice IX, thereby disentangling the roles of structural disorder, lattice constraints, and proton ordering in governing ultrafast energy flow. This unified framework provides an atomistic perspective on how network topology and degree of order influence the coupling between localized vibrational excitation and collective hydrogen-bond rearrangements.
 
+\begin{figure*}
+	\centering
+	\subfloat[]{%
+		\includegraphics[width=0.33\textwidth]{figures/water.png}
+		\label{fig:samples_water}
+	}
+	\subfloat[]{%
+		\includegraphics[width=0.33\textwidth]{figures/iceIh.png}
+		\label{fig:samples_iceIh}
+	}
+	\subfloat[]{%
+		\includegraphics[width=0.33\textwidth]{figures/iceIX.png}
+		\label{fig:samples_iceIX}
+	}
+	\caption{
+		Representative configurations of the three phases investigated in this work:
+		(a) liquid water, (b) proton-disordered ice Ih, and (c) proton-ordered ice IX.
+		Liquid water is characterized by a continuously fluctuating and structurally disordered network,
+		whereas ice Ih retains a crystalline lattice with orientational proton disorder.
+		In contrast, ice IX exhibits a fully proton-ordered structure with a more regular hydrogen-bond arrangement.
+	}
+	\label{fig:samples}
+\end{figure*}
 
 
 \section{Computational Details}
@@ -68,7 +91,22 @@ Due to the constraints imposed by the GenIce framework on the construction of pe
 \subsection{Interaction Model and Computational Framework}
 All molecular dynamics simulations in this study were performed using a neural network interatomic potential of the NEP (Neuro-Evolution Potential) class. The NEP framework represents the total energy of the system as a sum of atomic contributions expressed as functions of the local environment, with parameters trained on density functional theory (DFT) reference data. This class of potentials has been shown to provide near first-principles accuracy while retaining the computational efficiency required for large-scale molecular dynamics simulations, and has been validated for both liquid water and crystalline ice phases \cite{nep}. The simulations were carried out using the GPUMD package, which provides a native implementation of NEP potentials and enables efficient GPU-accelerated molecular dynamics. All equilibrium and non-equilibrium trajectories discussed in this work were generated within this computational framework.
 
-\begin{figure*}[ht!]
+
+
+\subsection{Simulation Protocol}
+For each system, an equilibration stage was first performed to ensure thermodynamic stability prior to the excitation procedure. Equilibration was carried out in the isothermal–isobaric (NPT) ensemble. The temperature was controlled using a Nosé–Hoover chain thermostat, while pressure was regulated through a Berendsen barostat, allowing the simulation cell to relax to the target density. Liquid water was equilibrated at $300\,\mathrm{K}$, whereas the crystalline ice phases were equilibrated at $200\,\mathrm{K}$. Equilibrium was assessed by monitoring the stability of the total energy, temperature, and pressure over time.\\
+
+At the end of the equilibration stage, the final configuration was used as the reference structure for the excitation protocol. Quantum nuclear fluctuations were incorporated through a Wigner phase-space representation applied to selected vibrational degrees of freedom.\\
+The corresponding distribution was constructed from the eigenstates of the full Lippincott–Schroeder (LS) potential for hydrogen-bonded pairs \cite{lspot}. The one-dimensional Schrödinger equation associated with the LS potential was solved to obtain the vibrational eigenfunctions and eigenvalues, which were used to evaluate the phase-space distribution.\\
+A fraction corresponding to 10\% of the total water molecules was randomly selected and initialized quantum mechanically. For each selected molecule, initial positions and momenta were sampled from the phase-space distributions associated with the $n=0$ and $n=1$ vibrational eigenstates of the LS potential for the two O–H bonds, respectively. The remaining 90\% of the molecules were initialized according to the classical Maxwell–Boltzmann distribution at the equilibration temperature.\\
+
+After the excitation step, the system was propagated in the microcanonical (NVE) ensemble to prevent artificial energy exchange with an external thermostat and to enable an unbiased characterization of the intrinsic non-equilibrium response. The subsequent dynamics were followed over a time interval of $30\,\mathrm{ps}$, sufficient to capture both the prompt structural response and the subsequent energy redistribution processes.\\
+All trajectories were integrated using a time step of $0.1\,\mathrm{fs}$, chosen to accurately resolve the high-frequency O–H stretching vibrations and to ensure stable energy conservation during the microcanonical production runs.\\
+
+For each phase, the entire equilibration–excitation–production workflow was repeated 50 times independently. All reported structural and dynamical observables were obtained by averaging over these independent realizations, and the associated uncertainties were estimated from the corresponding ensemble fluctuations.
+
+
+\begin{figure*}[t]
 	\centering
 	\subfloat[]{%
 		\includegraphics[width=\columnwidth]{figures/water_10perc_vdos.pdf}
@@ -87,42 +125,6 @@ All molecular dynamics simulations in this study were performed using a neural n
 	\caption{Time-resolved VDOS under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX. Colors indicate increasing time after excitation (red to blue). In all cases, the initial spectral enhancement appears at a frequency slightly lower than the equilibrium O–H stretching band, corresponding to the Wigner initialization based on the LS potential, and progressively shifts toward the intrinsic stretching band as the system evolves, accompanied by a redistribution of spectral weight toward lower-frequency modes.}	\label{fig:vdos}
 \end{figure*}
 
-\subsection{Simulation Protocol}
-For each system, an equilibration stage was first performed to ensure thermodynamic stability prior to the excitation procedure. Equilibration was carried out in the isothermal–isobaric (NPT) ensemble. The temperature was controlled using a Nosé–Hoover chain thermostat, while pressure was regulated through a Berendsen barostat, allowing the simulation cell to relax to the target density. Liquid water was equilibrated at $300\,\mathrm{K}$, whereas the crystalline ice phases were equilibrated at $200\,\mathrm{K}$. Equilibrium was assessed by monitoring the stability of the total energy, temperature, and pressure over time.\\
-
-At the end of the equilibration stage, the final configuration was used as the reference structure for the excitation protocol. Quantum nuclear fluctuations were incorporated through a Wigner phase-space representation applied to selected vibrational degrees of freedom.\\
-The corresponding distribution was constructed from the eigenstates of the full Lippincott–Schroeder (LS) potential for hydrogen-bonded pairs \cite{lspot}. The one-dimensional Schrödinger equation associated with the LS potential was solved to obtain the vibrational eigenfunctions and eigenvalues, which were used to evaluate the phase-space distribution.\\
-A fraction corresponding to 10\% of the total water molecules was randomly selected and initialized quantum mechanically. For each selected molecule, initial positions and momenta were sampled from the phase-space distributions associated with the $n=0$ and $n=1$ vibrational eigenstates of the LS potential for the two O–H bonds, respectively. The remaining 90\% of the molecules were initialized according to the classical Maxwell–Boltzmann distribution at the equilibration temperature.\\
-
-After the excitation step, the system was propagated in the microcanonical (NVE) ensemble to prevent artificial energy exchange with an external thermostat and to enable an unbiased characterization of the intrinsic non-equilibrium response. The subsequent dynamics were followed over a time interval of $30\,\mathrm{ps}$, sufficient to capture both the prompt structural response and the subsequent energy redistribution processes.\\
-All trajectories were integrated using a time step of $0.1\,\mathrm{fs}$, chosen to accurately resolve the high-frequency O–H stretching vibrations and to ensure stable energy conservation during the microcanonical production runs.\\
-
-For each phase, the entire equilibration–excitation–production workflow was repeated 50 times independently. All reported structural and dynamical observables were obtained by averaging over these independent realizations, and the associated uncertainties were estimated from the corresponding ensemble fluctuations.
-
-\begin{figure*}[p]
-	\centering
-	\subfloat[]{%
-		\includegraphics[width=0.9\textwidth]{figures/water_10perc_temps_all.pdf}
-		\label{fig:temps_all_water_a}
-	}
-	\hfill
-	\subfloat[]{%
-		\includegraphics[width=0.91\textwidth]{figures/iceIh_10perc_temps_all.pdf}
-		\label{fig:temps_all_iceIh_b}
-	}
-	\hfill
-	\subfloat[]{%
-		\includegraphics[width=0.9\textwidth]{figures/iceIX_10perc_temps_all.pdf}
-		\label{fig:temps_all_iceIX_c}
-	}
-	\caption{
-		Time-resolved modal temperatures and corresponding characteristic coupling times under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX.
-		Each panel reports the temporal evolution of the modal temperatures associated with O–H stretching, H–O–H bending, librational motion, hydrogen-bond degrees of freedom, and center-of-mass translation, together with exponential fits used to extract relaxation times.
-		The inset summary in each panel displays the characteristic intra- and intermolecular coupling times obtained from the fits.
-		Across all phases, a clear separation between ultrafast intramolecular relaxation and slower intermolecular thermalization is observed.
-	}
-	\label{fig:temps_all}
-\end{figure*}
 
 
 \section{Results and Discussion}
@@ -219,6 +221,32 @@ progressive redistribution of spectral weight toward lower-frequency modes.
 However, compared to liquid water, the spectral features in the crystalline
 phases remain sharper, reflecting the more constrained hydrogen-bond network and
 increases long-range structural order.\\
+
+\begin{figure*}[p]
+	\centering
+	\subfloat[]{%
+		\includegraphics[width=0.9\textwidth]{figures/water_10perc_temps_all.pdf}
+		\label{fig:temps_all_water_a}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=0.91\textwidth]{figures/iceIh_10perc_temps_all.pdf}
+		\label{fig:temps_all_iceIh_b}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=0.9\textwidth]{figures/iceIX_10perc_temps_all.pdf}
+		\label{fig:temps_all_iceIX_c}
+	}
+	\caption{
+		Time-resolved modal temperatures and corresponding characteristic coupling times under 10\% vibrational excitation for (a) liquid water, (b) ice Ih, and (c) ice IX.
+		Each panel reports the temporal evolution of the modal temperatures associated with O–H stretching, H–O–H bending, librational motion, hydrogen-bond degrees of freedom, and center-of-mass translation, together with exponential fits used to extract relaxation times.
+		The inset summary in each panel displays the characteristic intra- and intermolecular coupling times obtained from the fits.
+		Across all phases, a clear separation between ultrafast intramolecular relaxation and slower intermolecular thermalization is observed.
+	}
+	\label{fig:temps_all}
+\end{figure*}
+
 
 While the VDOS provides a clear spectral signature of the excitation, its temporal resolution is inherently limited by the finite window length used in the Fourier transform. In the present case, the 100 fs window implies that spectral estimates are effectively averaged over this timescale, preventing a fully resolved description of faster energy redistribution processes.\\
 To overcome this limitation, we analyze the time evolution of modal temperatures, which are defined from the instantaneous kinetic energy projections and therefore provide a frame-resolved characterization of the energy flow between different dynamical sectors.\\
