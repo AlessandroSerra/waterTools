@@ -9,6 +9,7 @@
 \usepackage{xcolor}
 \usepackage{braket}  % Bra-ket notation
 \usepackage{float}
+\usepackage{tikz}
 % \usepackage{subcaption}
 % \usepackage{cancel}  % Cancel terms in equations
 % \usepackage{caption}
@@ -17,12 +18,18 @@
 % \usepackage{enumerate}
 
 \bibliographystyle{apsrev4-2}
+\usetikzlibrary{arrows.meta}
 
 \def\iio{{$\langle 110 \rangle$}}
 \def\iii{{$\langle 111 \rangle$}}
 \def\etal{{\em et al.\/}}
 
 \newcommand{\degree}{\ensuremath{^\circ}}
+
+\definecolor{cblue}{HTML}{607B8F}
+\definecolor{cred}{HTML}{9E3B3B}
+\definecolor{cred2}{HTML}{EA7B7B}
+\definecolor{cgreen}{HTML}{84B179}
 
 \begin{document}
 
@@ -78,12 +85,19 @@ In this work, we address this challenge by combining selective vibrational excit
 \section{Computational Details}
 % \input{sections/Compu}
 \subsection{Generation of Equilibrium Samples}
-Before investigating the non-equilibrium response induced by vibrational excitation, we generated equilibrium reference samples for liquid water, ice Ih, and ice IX using consistent preparation protocols.\\
+Before investigating the non-equilibrium response induced by vibrational
+excitation, we generated equilibrium reference samples for liquid water, ice Ih,
+and ice IX using consistent preparation protocols.\\
 
-The liquid water samples were generated from an equilibrium configuration at ambient temperature, which was replicated to obtain a system of one thousand molecules. The system was generated inside a cubic cell, whose side length was chosen to reproduce an initial target mass density of $1 \mathrm{g/cm^3}$.\\
+The liquid water samples were generated from an equilibrium configuration at
+ambient temperature, which was replicated to obtain a system of one thousand
+molecules (Fig.~\ref{fig:samples_water}). The system was generated inside a cubic cell, whose side length was chosen to reproduce an initial target mass density of $1 \mathrm{g/cm^3}$.\\
 
 In contrast to the liquid phase, the generation of crystalline ice configurations requires explicit control over proton ordering and lattice symmetry, as well as compliance with the Ice Rules. Under these constraints, crystalline ice samples were generated using the GenIce framework \cite{GenIce}.\\
-In order to account for different proton orderings, we chose to represent two ice phases: the Ih phase, which is the stable proton-disordered form of ice under ambient-pressure conditions, and the IX phase, which corresponds to a proton-ordered crystalline structure. For ice Ih, GenIce was used to generate configurations satisfying the ice rules with disordered proton arrangements consistent with the Ih lattice symmetry. For ice IX, a proton-ordered configuration consistent with the corresponding crystallographic structure was generated, without the need for averaging over multiple proton disorder realizations.\\
+In order to account for different proton orderings, we chose to represent two
+ice phases: the Ih phase (Fig.~\ref{fig:samples_iceIh}), which is the stable
+proton-disordered form of ice under ambient-pressure conditions, and the IX
+(Fig.~\ref{fig:samples_iceIX}) phase, which corresponds to a proton-ordered crystalline structure. For ice Ih, GenIce was used to generate configurations satisfying the ice rules with disordered proton arrangements consistent with the Ih lattice symmetry. For ice IX, a proton-ordered configuration consistent with the corresponding crystallographic structure was generated, without the need for averaging over multiple proton disorder realizations.\\
 
 Due to the constraints imposed by the GenIce framework on the construction of periodic crystalline cells, the ice Ih and ice IX unit cells were replicated to obtain supercells containing 3072 and 2880 atoms, respectively. These system sizes were chosen as the closest multiples compatible with the underlying lattice symmetries and comparable to the system size used for liquid water.
 
@@ -169,24 +183,47 @@ the same equipartition-based definition.\\
 
 \begin{figure}[t]
 	\begin{center}
-		\includegraphics[width=0.95\columnwidth]{figures/HB-trestati.png}
+		\begin{tikzpicture}
+			\draw[cblue, line width=3pt] (0,0) -- (3,0);
+			\draw[cred, line width=3pt] (0,3.5) -- (3,3.5);
+			\draw[cred2, line width=3pt] (5,2.2) -- (8,2.2);
+			\draw[cgreen, line width=3pt] (5,0.5) -- (8,0.5);
+
+			\draw[dashed, -{Stealth}, line width=2pt] (1.5,0.1) -- (1.5,3.4);
+			\draw[dashed, -{Stealth}, line width=2pt] (2.5,3.4) -- (5.5,2.3);
+			\draw[dashed, -{Stealth}, line width=2pt] (6.5,2.1) -- (6.5,0.6);
+
+			\node at (0.5, 0.4) {\large $\boldsymbol{|0\rangle}$};
+			\node at (0.5, 3.1) {\large $\boldsymbol{|1\rangle}$};
+			\node at (7.5, 2.6) {\large $\boldsymbol{|1^*\rangle}$};
+			\node at (7.5, 0.9) {\large $\boldsymbol{|0^{'}\rangle}$};
+
+			\node at (4.4, 3.2) {\large $\boldsymbol{\tau_{cp}}$};
+			\node at (6, 1.5) {\large $\boldsymbol{\tau_{th}}$};
+		\end{tikzpicture}
 	\end{center}
 	\caption{
 	Schematic representation of the relaxation pathway following selective
 	excitation of hydrogen-bonded O–H vibrations. The initially excited state
 	$|1\rangle$ undergoes rapid coupling toward a metastable intermediate state
-	$|0^{*}\rangle$ on a characteristic timescale $\tau_1$, corresponding to the
+	$|1^{*}\rangle$ on a characteristic timescale $\tau_{cp}$, corresponding to the
 	first energy transfer process. Subsequently, the system relaxes toward the final
-	equilibrated state $|0'\rangle$ on a slower timescale $\tau_2$, which represent
+	equilibrated state $|0'\rangle$ on a slower timescale $\tau_{th}$, which represent
 	the new ground state.}
 	\label{fig:HB-trestati}
 \end{figure}
+
+% \begin{figure}[t]
+% 	\begin{center}
+% 		\includegraphics[width=\columnwidth]{figures/HB-trestati.png}
+% 	\end{center}
+% \end{figure}
 
 
 The temporal evolution of each modal temperature was analyzed by fitting the data to a bi-exponential model of the form
 
 \begin{equation}
-	T(t) = T_{\infty} + A_1 e^{-t/\tau_1} + A_2 e^{-t/\tau_2},
+	T(t) = T_{\infty} + A_1 e^{-t/\tau_{cp}} + A_2 e^{-t/\tau_{th}},
 \end{equation}
 
 where $T_{\infty}$ denotes the long-time equilibrium temperature, while $\tau_1$
@@ -250,13 +287,103 @@ increases long-range structural order.\\
 
 While the VDOS provides a clear spectral signature of the excitation, its temporal resolution is inherently limited by the finite window length used in the Fourier transform. In the present case, the 100 fs window implies that spectral estimates are effectively averaged over this timescale, preventing a fully resolved description of faster energy redistribution processes.\\
 To overcome this limitation, we analyze the time evolution of modal temperatures, which are defined from the instantaneous kinetic energy projections and therefore provide a frame-resolved characterization of the energy flow between different dynamical sectors.\\
-The characteristic relaxation times extracted from the bi-exponential fits are
-summarized in Fig.~\ref{fig:temps_all}. A clear hierarchy of energy
-redistribution timescales emerges across the three phases
+The characteristic coupling times extracted from the bi-exponential fits are
+summarized in Fig.~\ref{fig:temps_all}: the time evolution of the modal
+temperatures reveals a structured hierarchy of energy redistribution processes.\\
+
+Before discussing said hierarchy, it is useful to isolate the prompt center-of-mass response observed immediately after excitation. In all three phases, the selective initialization of a subset of O–H bonds induces a rapid increase in the center-of-mass kinetic energy of the excited molecules. This feature reflects a direct impulsive
+transfer of momentum associated with the non-equilibrium initialization
+rather than a genuine thermalization pathway.\\
+The timescale of this initial spike depends on the mechanical environment:
+it is fastest in ice Ih, intermediate in ice IX, and slowest in liquid
+water. In the crystalline phases, the lattice constraints promote a more
+direct transfer of the injected momentum to translational motion, whereas
+in the liquid phase part of the excess energy is immediately redistributed
+among internal vibrational degrees of freedom. For this reason, the prompt
+center-of-mass spike is treated separately from the subsequent coupling
+processes discussed below.\\
+
+After the initial impulsive response, the energy redistribution enters
+an ultrafast intramolecular regime ($t < 100\,\mathrm{fs}$), in which the
+characteristic coupling times of librational and bending modes remain
+within the same order of magnitude for all phases. Although these
+timescales fall within a narrow temporal window ($30–70\,\mathrm{fs}$), their
+relative hierarchy is mode dependent. For instance, librational heating
+is fastest in liquid water and slowest in ice Ih, whereas the bending
+response exhibits a different ordering. This behavior indicates that
+the earliest redistribution stage is governed primarily by local
+anharmonic couplings, whose efficiency depends sensitively on the
+specific vibrational coordinate and on the microscopic structure of
+the surrounding hydrogen-bond environment.\\
+
+At intermediate times ($100–500\,\mathrm{fs}$), a clearer differentiation between the
+three phases emerges. In this regime, the coupling of unexcited O–H stretching
+modes proceeds most rapidly in ice Ih, followed by ice IX, and is slowest
+in liquid water. This indicates that the transfer of energy between
+stretching coordinates is facilitated in the crystalline environments,
+particularly in the proton-disordered phase.\\
+In contrast, the redistribution toward unexcited bending degrees of freedom
+exhibits a different ordering: liquid water responds most rapidly, followed
+by ice IX, while ice Ih displays the slowest heating. The inversion of the
+hierarchy between stretching and bending sectors highlights the presence
+of competing energy-transfer pathways. Whereas stretch–stretch coupling
+appears to benefit from the structural constraints of the lattice,
+stretch–bend redistribution is enhanced in the dynamically fluctuating
+environment of the liquid phase.\\
+This mode-dependent behavior signals a crossover from predominantly local
+intramolecular channels to mechanisms increasingly influenced by the
+collective structure of the hydrogen-bond network.\\
+
+At longer timescales ($t > 1\,\mathrm{ps}$), the redistribution process becomes
+dominated by collective intermolecular motion and global energy transport
+through the hydrogen-bond network. In this regime, a systematic hierarchy
+between the three phases becomes evident.\\
+For hydrogen-bond related motion and center-of-mass degrees of freedom,
+liquid water exhibits the fastest approach toward the final equilibrium
+temperature, followed by ice IX, while ice Ih displays the slowest
+thermalization. This ordering is particularly pronounced in the
+center-of-mass relaxation times, where the proton-disordered ice Ih phase
+shows significantly longer equilibration times compared to both the
+proton-ordered crystal and the liquid.\\
+The convergence of librational heating times in the crystalline phases,
+together with their marked separation from the liquid case, further
+indicates that once energy reaches the collective manifold, its subsequent
+redistribution is strongly influenced by the nature of the underlying
+network. In liquid water, the presence of continuous structural
+rearrangements provides multiple dissipative channels, promoting a
+relatively rapid global equilibration. In contrast, the crystalline
+phases require energy transport across a more constrained hydrogen-bond
+lattice.\\
+Within the crystalline systems, the systematically slower thermalization
+observed in ice Ih compared to ice IX suggests that proton disorder
+introduces additional scattering or mode-mixing effects, reducing the
+efficiency of long-range energy transport. In this sense, proton ordering
+appears to facilitate a more coherent redistribution of energy through
+the hydrogen-bond network.
+
 
 
 \section{Conclusions}
 
+\begin{table}[H]
+	\begin{ruledtabular}
+		\begin{tabular}{l|ccc}
+			Mode          & Water    & Ice IX   & Ice Ih    \\
+			\colrule
+			Libr. exc.    & 0.039266 & 0.053111 & 0.071997  \\
+			HOH exc.      & 0.063735 & 0.071081 & 0.049115  \\
+			CM exc. spike & 0.095897 & 0.059729 & 0.035687  \\
+			OH unexc.     & 0.290093 & 0.216299 & 0.152756  \\
+			HOH unexc.    & 0.229555 & 0.279474 & 0.414095  \\
+			\hline
+			Libr unexc.   & 2.079167 & 0.731097 & 0.753811  \\
+			HB            & 2.633747 & 3.621040 & 5.251458  \\
+			CM unexc.     & 2.854651 & 3.763624 & 6.053578  \\
+			CM exc.       & 4.144040 & 4.401573 & 10.785466 \\
+		\end{tabular}
+	\end{ruledtabular}
+	\caption{}
+\end{table}
 
 \clearpage
 
