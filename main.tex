@@ -41,7 +41,12 @@
 \date{\today}
 
 \begin{abstract}
-	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+	non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 \end{abstract}
 
 \maketitle
@@ -314,7 +319,36 @@ response exhibits a different ordering. This behavior indicates that
 the earliest redistribution stage is governed primarily by local
 anharmonic couplings, whose efficiency depends sensitively on the
 specific vibrational coordinate and on the microscopic structure of
-the surrounding hydrogen-bond environment.\\
+the surrounding hydrogen-bond environment~\cite{woutersen2006ultrafast}.
+
+
+\begin{figure*}[t]
+	\centering
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/water_10perc_rdf.pdf}
+		\label{fig:rdf_water_a}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIh_10perc_rdf.pdf}
+		\label{fig:rdf_iceIh_b}
+	}
+	\hfill
+	\subfloat[]{%
+		\includegraphics[width=\columnwidth]{figures/iceIX_10perc_rdf.pdf}
+		\label{fig:rdf_iceIX_c}
+	}
+	\caption{
+		Time-resolved Oxygen--Oxygen radial distribution function following
+		10\% selective O--H vibrational excitation in (a) liquid water,
+		(b) ice Ih, and (c) ice IX. The left panels show the evolution of
+		$g_{OO}(r,t)$ within the first $2 \mathrm{ps}$ after excitation (color scale from
+		blue to green). The right panels report the corresponding time-dependent shift of the first-shell position, $\Delta r_{OO}^{(1)}(t)$, together with the variation
+		of the second-shell intensity, $\Delta I_{OO}^{(2)}(t)$, both measured
+		relative to equilibrium. The vertical dotted lines indicate the
+		RDF intervals used for the calculation of these quantities.}
+	\label{fig:rdf}
+\end{figure*}
 
 At intermediate times ($100–500\,\mathrm{fs}$), a clearer differentiation between the
 three phases emerges. In this regime, the coupling of unexcited O–H stretching
@@ -332,7 +366,7 @@ stretch–bend redistribution is enhanced in the dynamically fluctuating
 environment of the liquid phase.\\
 This mode-dependent behavior signals a crossover from predominantly local
 intramolecular channels to mechanisms increasingly influenced by the
-collective structure of the hydrogen-bond network.\\
+collective structure of the hydrogen-bond network~\cite{dettori2017simulating}.\\
 
 At longer timescales ($t > 1\,\mathrm{ps}$), the redistribution process becomes
 dominated by collective intermolecular motion and global energy transport
@@ -357,13 +391,95 @@ lattice.\\
 Within the crystalline systems, the systematically slower thermalization
 observed in ice Ih compared to ice IX suggests that proton disorder
 introduces additional scattering or mode-mixing effects, reducing the
-efficiency of long-range energy transport. In this sense, proton ordering
-appears to facilitate a more coherent redistribution of energy through
-the hydrogen-bond network.
+efficiency of long-range vibrational energy transport, consistent with the general behavior of disordered solids~\cite{allen1989thermal}.
+In this sense, proton ordering appears to facilitate a more coherent
+redistribution of energy through the hydrogen-bond network.\\
+
+
+To connect our nonequilibrium simulations to the structural signatures
+commonly discussed in infrared pump--probe experiments, we analyze the
+time-dependent oxygen--oxygen radial distribution function, $g_{OO}(r,t)$.
+In particular, following the interpretation adopted in computational
+pump--probe studies of hydrogen-bonded liquids, we monitor the transient
+evolution of the first-shell O--O distance as a proxy for short-range
+hydrogen-bond network response~\cite{dettori2017simulating,dettori2019energy}.\\
+
+For each phase, $g_{OO}(r,t)$ is evaluated in short time windows after the
+excitation and compared to its equilibrium reference. To obtain a compact
+time-resolved descriptor, we extract (i) the displacement of the first-shell
+position, $\Delta r_{OO}^{(1)}(t)$, and (ii) the change in the second-shell
+intensity, $\Delta I_{OO}^{(2)}(t)$, which provide complementary measures of
+local network contraction/expansion and medium-range rearrangements.
+Specifically, the first-shell position was computed as the centroid of
+$g_{OO}(r,t)$ within a fixed radial interval corresponding to the first
+coordination shell, while the second-shell intensity was obtained by
+integrating $g_{OO}(r,t)$ over the predefined second-shell interval
+(indicated by the vertical dotted lines in Fig.~\ref{fig:rdf}).\\
+
+We first analyze the structural response of liquid water
+(Fig.~\ref{fig:rdf_water_a}). Following excitation, the first O--O coordination
+shell exhibits a clear transient contraction, reaching a minimum shift
+of $\Delta r_{OO}^{(1)} \simeq -0.013\,\mathrm{\AA}$ within the first
+few hundred femtoseconds. This initial compression is subsequently
+followed by a gradual recovery toward the equilibrium position and,
+at longer times, by a slow positive drift indicative of net expansion.
+The second-shell intensity undergoes a concurrent transient modulation,
+reflecting a short-range rearrangement of the hydrogen-bond network
+during the nonequilibrium relaxation.\\
+
+We next examine the structural response of ice Ih
+(Fig.~\ref{fig:rdf_iceIh_b}). In contrast to the liquid phase, the first
+O--O coordination shell does not exhibit a pronounced transient
+contraction following excitation. Instead, $\Delta r_{OO}^{(1)}(t)$
+shows a predominantly positive shift, corresponding to a gradual
+expansion of the first shell over time. The second-shell intensity
+displays a smooth evolution without marked oscillatory features,
+consistent with a monotonic structural relaxation within the
+crystalline lattice.\\
+
+We finally consider the structural response of ice IX
+(Fig.~\ref{fig:rdf_iceIX_c}). In this case, the first O--O coordination
+shell exhibits a markedly oscillatory behavior following excitation.
+The shift $\Delta r_{OO}^{(1)}(t)$ alternates between contraction and
+expansion over the first picoseconds, with a clearly damped oscillatory
+pattern rather than a monotonic relaxation. A similar oscillatory
+modulation is observed in the second-shell intensity, indicating that
+the structural response involves correlated variations extending beyond
+the first coordination shell.\\
+
+The oscillatory response observed in ice IX suggests that, in the
+proton-ordered crystalline phase, vibrational excitation induces a
+collective structural modulation rather than a purely monotonic
+relaxation. The alternating contraction and expansion of the first
+coordination shell is consistent with a transient elastic response of
+the hydrogen-bond network. In a proton-ordered lattice, the more
+regular orientational arrangement of hydrogen bonds reduces structural
+disorder and may favor a more coherent redistribution of the injected
+energy across intermolecular degrees of freedom, giving rise to a
+damped structural oscillation before global thermalization is reached.\\
+
+The structural signatures revealed by the time-dependent radial
+distribution functions are consistent with the hierarchy of
+redistribution timescales discussed above. In liquid water, the rapid
+transfer of energy toward intermolecular and center-of-mass degrees of
+freedom is accompanied by a clear transient contraction of the first
+coordination shell, indicating a short-lived densification of the
+hydrogen-bond network prior to thermal expansion. In ice Ih, the
+predominantly monotonic structural evolution reflects the constrained
+response of the proton-disordered lattice, where energy redistribution
+does not generate a coherent elastic modulation. By contrast, the
+robust oscillatory behavior of ice IX mirrors the more ordered
+collective redistribution inferred from the modal temperatures,
+suggesting that proton ordering favors a transiently coherent coupling
+between energetic and structural degrees of freedom before full
+thermalization is established.
 
 
 
 \section{Conclusions}
+
+
+\clearpage
 
 \begin{table}[H]
 	\begin{ruledtabular}
